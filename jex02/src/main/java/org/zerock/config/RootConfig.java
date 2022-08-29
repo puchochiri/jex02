@@ -13,6 +13,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
 @Configuration
+@ComponentScan(basePackages= {"org.zerock.service"})
 @ComponentScan(basePackages= {"org.zerock.sample"})
 @MapperScan(basePackages= {"org.zerock.mapper"})
 public class RootConfig {
@@ -34,7 +35,7 @@ public class RootConfig {
 	@Bean
 	public SqlSessionFactory sqlSessionFactory() throws Exception {
 		SqlSessionFactoryBean sqlSessionFactory = new
-	SqlSessionFactoryBean();
+		SqlSessionFactoryBean();
 		sqlSessionFactory.setDataSource(dataSource());
 		return (SqlSessionFactory) sqlSessionFactory.getObject();
 		
