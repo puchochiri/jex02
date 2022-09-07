@@ -40,17 +40,29 @@ public class BoardControllerTests {
 		
 	}
 	
+	//@Test
+	//public void testList() throws Exception {
+		
+	//	log.info("testList실행");
+		
+	//	log.info(
+	//			mockMvc.perform(MockMvcRequestBuilders.get("/board/list"))
+	//			.andReturn()
+	//			.getModelAndView()
+	//			.getModelMap()
+	//			);
+		
+	//}
+	
 	@Test
-	public void testList() throws Exception {
+	public void testListPaging() throws Exception {
 		
-		log.info("testList실행");
-		
-		log.info(
-				mockMvc.perform(MockMvcRequestBuilders.get("/board/list"))
-				.andReturn()
-				.getModelAndView()
-				.getModelMap()
-				);
+		log.info("testListPaging 실행");
+		log.info(mockMvc.perform(
+				MockMvcRequestBuilders.get("/board/list")
+				.param("pageNum", "2")
+				.param("amount", "50"))
+				.andReturn().getModelAndView().getModelMap());
 		
 	}
 	
