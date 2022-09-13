@@ -21,7 +21,7 @@
                         
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <table width="100%" class="table table-striped">
+                            <table width="100%" class="table">
                                 <thead>
                                     <tr>
                                         <th>#번호</th>
@@ -34,8 +34,17 @@
                                 <c:forEach items="${list}" var="board">
                                 		<tr>
 			                                	<td><c:out value="${board.bno}" /></td>
-			                                	<td><a href='/board/get?bno=<c:out value="${board.bno}" />'>
+						                            <!-- 새창 띄우기      	target='_blank'
+						                            <td><a href='/board/get?bno=<c:out value="${board.bno}"/>'  target='_blank'>
+						                            -->
+																				<!-- 
+			                                	<td><a href='/board/get?bno=<c:out value="${board.bno}"/>'  target='_blank'>
 			                                	<c:out value="${board.title}" /></td>
+			                                	 -->
+			                                	<td>
+						                            	<a class= 'move' href='<c:out value="${board.bno}"/>'>
+						                            	<c:out value="${board.title}" /></a>
+						                            </td>	
 			                                	<td><c:out value="${board.writer}" /></td>
 			                                	<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.regdate}"/></td>
 			                                	<td><fmt:formatDate pattern="yyyy-MM-dd" value="${board.updateDate}"/></td>
@@ -43,27 +52,27 @@
                                 </c:forEach>
                                
                             </table>
-                            <!-- paging -->
-                            <div class='pull-right'>
+                        <!-- paging -->
+                          <div class='pull-right'>
                             	<ul class="pagination">
                             <c:if test="${pageMaker.prev}">
                             			<li class="paginate_button previous">
-                            				<a href="#">Previous</a>
+                            				<a href="${pageMaker.startPage - 1}">Previous</a>
                             			</li>
                             </c:if>
                             			
                             <c:forEach var="num" begin="${pageMaker.startPage}" end="${pageMaker.endPage}">
-                            				<li class="paginate_button">
-                            					<a href="#">${num}</a>
+                            				<li class="paginate_button" ${pagemaker.cri.pageNum == num ? "active" :""} ">
+                            					<a href="${num}">${num}</a>
                             				</li>
                             </c:forEach>
                             			
                            	<c:if test="${pageMaker.next}">
                             			<li class="paginate_button next">
-                            				<a href="#">Next</a>
+                            				<a href="${pageMaker.endPage + 1}">Next</a>
                             			</li>
                             </c:if>
-                            			
+
                             	
                             	</ul>
                             </div>
@@ -97,6 +106,11 @@
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
+            
+            <form id='actionForm' action="/board/list" method='get'>
+            	<input type='hidden' name='pageNum' value='${pageMaker.cri.pageNum}'>
+            	<input type='hidden' name='amount' value='${pageMaker.cri.amount}'>
+            </form>
 
 <script type="text/javascript">
        $(document).ready(function(){
@@ -106,23 +120,56 @@
        	
        	checkModal(result);
        	
-       	function checkModal(result) {
-       		if (result === '') {
-       			return;
-       		}
-       		if (parseInt(result) > 0){
-       			$(".modal-body").html("게시글 " + parseInt(result) + " 번이 등록되었습니다.");
-       		}
-       		
-       		$("#myModal").modal("show");
-       	}
+       	history.replaceState({},null,null);
+	       	
+	       	function checkModal(result) {
+		       		if (result === '' || history.state) {
+		       			return;
+		       		}
+		       		if (parseInt(result) > 0){
+		       			$(".modal-body").html("게시글 " + parseInt(result) + " 번이 등록되었습니다.");
+		       		}
+		       		
+		       		$("#myModal").modal("show");
+	       	}
        	
        	
-       	$("#regBtn").on("click",function(){
-       		
-       		self.location = "/board/register";
-       		
-       	});
+	       	$("#regBtn").on("click",function(){
+	       		
+		      		self.location = "/board/register";
+	       		
+	       	});
+	       	
+	       	var actionForm = $("#actionForm");
+	       	
+	       	$(".paginate_button a").on("click", function(e) {
+	       		
+	       		e.preventDefault(); //a태그를 눌렀을때도 href링크로 이동하기 않게 할 경우
+	       												//form안에 submit 역할을 하는 버튼을 눌렀어도 새로 실행하지 않게 하고 싶을 겅우(submit은 작동됨)
+	       		
+	       		console.log('click');
+	       		console.log($(this).attr("href"));
+	       		
+	       		actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+	       		
+	       		actionForm.submit();
+	       	});
+	       	
+	       	$(".move").on("click",function(e){
+	       		
+	       		e.preventDefault();
+	       		
+	       		console.log("move");
+	       		console.log($(this).attr("href"));
+	       		console.log("actionForm");
+	       		console.log(actionForm);
+	       		console.log("this");
+	       		console.log(this);
+	       		actionForm.append("<input type='hidden' name='bno' value='"+
+	       			$(this).attr("href")+"'>");
+	       			actionForm.attr("action","/board/get");
+	       			actionForm.submit();
+	       	});
        	
        	
        });
