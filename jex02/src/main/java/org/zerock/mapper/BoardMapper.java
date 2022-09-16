@@ -11,8 +11,6 @@ public interface BoardMapper {
 	//@Select("select * from tbl_board where bno > 0")
 	public List<BoardVO> getList();
 	
-	public List<BoardVO> getListWithPaging(Criteria cri);
-	
 	public void insert(BoardVO board);
 	
 	public void insertSelectKey(BoardVO board);
@@ -23,7 +21,9 @@ public interface BoardMapper {
 	
 	public int update(BoardVO board);
 	
+	public List<BoardVO> getListWithPaging(Criteria cri);
 	
+	public int getTotalCount(Criteria cri);
 
 
 }

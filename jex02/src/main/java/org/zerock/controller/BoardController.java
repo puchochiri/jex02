@@ -33,11 +33,16 @@ public class BoardController {
 	// http://localhost:9092/board/list?pageNum=5&amount=20
 	@GetMapping("/list")
 	public void list(Criteria cri, Model model) {
+
 		log.info("list: " + cri);
-		
 		model.addAttribute("list", service.getList(cri));
-		model.addAttribute("pageMaker", new PageDTO(cri, 123));
+		//model.addAttribute("pageMaker", new PageDTO(cri, 123));
 		
+		int total = service.getTotal(cri);
+		
+		log.info("total: " + total);
+		
+		model.addAttribute("pagemaker", new PageDTO(cri, total));
 	}
 	
 	@GetMapping("/register")
